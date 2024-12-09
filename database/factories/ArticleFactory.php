@@ -23,8 +23,8 @@ class ArticleFactory extends Factory
         return [
             //
             'title' => $this->faker->sentence(),
-            'content' => implode("\n\n", $this->faker->paragraphs(40)),
-            'user_id' => User::where('role', 'Guru')->inRandomOrder()->first()->id,
+            'content' => implode("\n\n", $this->faker->paragraphs(7)),
+            'user_id' => 1,
             'description' => $this->faker->text(150),
             'category_id' => Category::inRandomOrder()->first()->id,
         ];
