@@ -29,7 +29,6 @@ require __DIR__.'/auth.php';
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [ArticleController::class, 'index'])->name('articles.index');  // Daftar artikel
-    Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');  // Daftar artikel
     Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');  // Form buat artikel
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');  // Simpan artikel
     Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');  // Form edit artikel
@@ -38,4 +37,5 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Route::resource('articles', ArticleController::class);
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');  // Daftar artikel
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
