@@ -12,4 +12,10 @@ export default defineConfig({
         }),
         react(),
     ],
+    server: {
+        proxy: {
+            '/api': 'http://localhost', // Sesuaikan dengan alamat backend Laravel
+            '/sanctum/csrf-cookie': 'http://localhost', // Tambahkan untuk mengizinkan request CSRF
+        }
+    }
 });

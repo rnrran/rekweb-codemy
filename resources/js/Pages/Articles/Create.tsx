@@ -37,7 +37,7 @@ const Create: React.FC<CreateProps> = ({ categories }) => {
     if (result.isConfirmed) {
       post('/articles', {
         onSuccess: () => {
-          Swal.fire('Created!', 'Artikel berhasil dibuat.', 'success');
+          Swal.fire('Teroublish!', 'Artikel berhasil dipublish.', 'success');
         },
         onError: () => {
           Swal.fire('Error!', 'Ada masalah ketika membuat konten', 'error');
