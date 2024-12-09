@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
@@ -17,6 +17,7 @@ interface IndexProps {
 
 const Index: React.FC<IndexProps> = ({ articles }) => {
   // Loop through articles and create a delete handler for each one
+  const user = usePage().props.auth.user;
   const { delete:deleteArticle } = useForm()
   const handleDelete = (articleId: number) => {
     if (confirm('Are you sure you want to delete this article?')) {
@@ -26,11 +27,13 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
     }
   };
 
+  console.log("user:", user)
+
   return (
     <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Selamat Datang !
+                    Selamat Datang, {user.name} !
                 </h2>
             }
         >
@@ -38,21 +41,34 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
 
     <div className="py-12">
       <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
-            <h1>Articles</h1>
-            <Link href="/articles/create" className="btn btn-primary">
-              Create New Article
-            </Link>
-            <ul>
+          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 text-9xl 
+          text-center py-20">
+              Ceritanya Carousel Gambar
+          </div>
+          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 ">
+            <div className='flex flex-row justify-between'>
+              <h1 className='text-7xl font-bold font-sans mb-10 '>📚 Yuk Belajar !</h1>
+              <Link href="/articles/create" className="btn btn-xs">
+                Create New Article
+              </Link>
+            </div>
+            <ul className='overflow-y-auto max-h-96 bg-white rounded text-center border-2'>
               {articles.map((article) => (
-                <li key={article.id}>
-                  <h3>{article.title}</h3>
-                  <p>{article.description}</p>
-                  <Link href={`/articles/${article.id}/edit`}>Edit</Link>
+                <li key={article.id} 
+                className={'border-b-2 my-4 py-4 pb-4'}
+                >
+                  <h3 className='text-4xl font-sans font-semibold'>{article.title}</h3>
+                  <p className='font-sans font-light'>{article.description}</p>
+                  <Link href={`/articles/${article.id}/edit`}
+                    className='btn btn-xs'
+                  >
+                          Edit
+                  </Link>
                   {/* Using a button with onClick handler */}
                   <button
                     onClick={() => handleDelete(article.id)}
                     style={{ display: 'inline-block' }}
+                    className='btn btn-xs btn-error'
                   >
                     Delete
                   </button>
