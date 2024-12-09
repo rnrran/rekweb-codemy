@@ -25,6 +25,13 @@ class ArticleController extends Controller
 
     }
 
+    public function show(Article $article)
+    {
+        $article->load('user', 'category');
+
+        return Inertia::render('Articles/Show', compact('article'));
+    }
+
     /**
      * Menampilkan form untuk membuat artikel baru.
      *

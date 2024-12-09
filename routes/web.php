@@ -38,3 +38,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Route::resource('articles', ArticleController::class);
+Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
