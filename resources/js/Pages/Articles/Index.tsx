@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import Swal from 'sweetalert2';
 
 interface Article {
   id: number;
@@ -19,9 +20,28 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
 
   const user = usePage().props.auth.user;
   const { delete: deleteArticle } = useForm();
-  const handleDelete = (articleId: number) => {
-    if (confirm('Are you sure you want to delete this article?')) {
-      deleteArticle(`/articles/${articleId}`);
+  const handleDelete = async (articleId: number) => {
+    // Menampilkan konfirmasi dengan SweetAlert
+    const result = await Swal.fire({
+      title: 'Yakin hapus?',
+      text: 'Tidak bisa kembali lagi ketika artikel terhapus',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Cancel',
+    });
+  
+    // Jika pengguna mengonfirmasi, hapus artikel
+    if (result.isConfirmed) {
+      deleteArticle(`/articles/${articleId}`, {
+        onSuccess: () => {
+          Swal.fire('Terhapus!', 'Artikel berhasil dihapus.', 'success');
+        },
+        onError: (errors) => {
+          Swal.fire('Error!', 'There was an issue deleting the article.', 'error');
+          console.error('Error deleting article', errors);
+        }
+      });
     }
   };
 
