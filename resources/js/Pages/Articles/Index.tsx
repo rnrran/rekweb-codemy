@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 
 // Definisikan tipe untuk props
 interface Article {
@@ -13,6 +13,16 @@ interface IndexProps {
 }
 
 const Index: React.FC<IndexProps> = ({ articles }) => {
+  // Loop through articles and create a delete handler for each one
+  const { delete:deleteArticle } = useForm()
+  const handleDelete = (articleId: number) => {
+    if (confirm('Are you sure you want to delete this article?')) {
+      // Use the useForm hook's delete method
+      // const { delete: deleteArticle } = useForm();
+      deleteArticle(`/articles/${articleId}`);
+    }
+  };
+
   return (
     <div>
       <h1>Articles</h1>
@@ -25,10 +35,13 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
             <h3>{article.title}</h3>
             <p>{article.description}</p>
             <Link href={`/articles/${article.id}/edit`}>Edit</Link>
-            <form method="POST" action={`/articles/${article.id}`} style={{ display: 'inline-block' }}>
-              <input type="hidden" name="_method" value="DELETE" />
-              <button type="submit">Delete</button>
-            </form>
+            {/* Using a button with onClick handler */}
+            <button
+              onClick={() => handleDelete(article.id)}
+              style={{ display: 'inline-block' }}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
