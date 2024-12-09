@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, router } from '@inertiajs/react';
 
 interface Category {
   id: number;
@@ -19,7 +19,7 @@ interface EditProps {
 
 const Edit: React.FC<EditProps> = ({ article, categories }) => {
   // Inertia useForm hook untuk menangani form
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, put } = useForm({
     title: article.title,
     content: article.content,
     category_id: article.category_id.toString(),
@@ -30,13 +30,13 @@ const Edit: React.FC<EditProps> = ({ article, categories }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Mengirimkan data ke backend menggunakan POST
-    post(`/articles`, {
+    put(`/articles/${article.id}`, {
       onSuccess: () => {
-        console.log("Article created successfully!");
+        console.log('Article updated successfully');
       },
-      onError: () => {
-        console.log("Error creating article.");
-      },
+      onError: (errors) => {
+        console.error('Error updating article', errors);
+      }
     });
   };
 
