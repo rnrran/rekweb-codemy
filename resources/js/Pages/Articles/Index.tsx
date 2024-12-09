@@ -20,8 +20,8 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
 
   const user = usePage().props.auth.user;
   const { delete: deleteArticle } = useForm();
+
   const handleDelete = async (articleId: number) => {
-    // Menampilkan konfirmasi dengan SweetAlert
     const result = await Swal.fire({
       title: 'Yakin hapus?',
       text: 'Tidak bisa kembali lagi ketika artikel terhapus',
@@ -31,7 +31,6 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
       cancelButtonText: 'Cancel',
     });
   
-    // Jika pengguna mengonfirmasi, hapus artikel
     if (result.isConfirmed) {
       deleteArticle(`/articles/${articleId}`, {
         onSuccess: () => {
@@ -45,7 +44,8 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
     }
   };
 
-  console.log("user:", articles);
+  // sort berdasar tanggal
+  const sortedArticles = articles.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return (
     <AuthenticatedLayout
@@ -61,10 +61,9 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
         <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
           <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 text-9xl 
               text-center py-20 flex justify-center">
-
-            <img src="/images/belajar.gif" alt="belajar" style={{ width: '80%', height: 'auto' }} className=''/>
+            <img src="/images/belajar.gif" alt="belajar" style={{ width: '80%', height: 'auto' }} />
           </div>
-          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 ">
+          <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
             <div className='flex flex-row justify-between'>
               <h1 className='text-7xl font-bold font-sans mb-10 '>📚 Yuk Belajar !</h1>
               <Link href="/articles/create" className="btn btn-xs">
@@ -72,17 +71,16 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
               </Link>
             </div>
             <ul className='overflow-y-auto max-h-96 bg-white rounded text-center border-2'>
-              {articles.map((article) => {
+              {sortedArticles.map((article) => {
                 const isExpanded = expandedArticles.includes(article.id);
                 const truncatedDescription = article.description.length > 100
                   ? `${article.description.substring(0, 100)}...`
                   : article.description;
 
-                // Format tanggal penulisan
                 const formattedDate = new Date(article.created_at).toLocaleDateString('id-ID', {
                   year: 'numeric',
                   month: 'long',
-                  day: 'numeric'
+                  day: 'numeric',
                 });
 
                 return (
@@ -96,7 +94,6 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
                     </p>
                     {article.description.length > 100 && (
                       <Link
-                        // onClick={() => toggleReadMore(article.id)}
                         className='btn btn-xs btn-link'
                         href={`/articles/${article.id}`}
                       >
@@ -107,7 +104,6 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
                       <Link href={`/articles/${article.id}/edit`} className='btn btn-xs mr-2'>
                         Edit
                       </Link>
-                      {/* Tombol Delete */}
                       <button
                         onClick={() => handleDelete(article.id)}
                         className='btn btn-xs btn-error'
