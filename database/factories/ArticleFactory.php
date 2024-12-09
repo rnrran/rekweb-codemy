@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Article;
+use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ArticleFactory extends Factory
 {
+    protected $model = Article::class;
     /**
      * Define the model's default state.
      *
@@ -18,6 +22,11 @@ class ArticleFactory extends Factory
     {
         return [
             //
+            'title' => $this->faker->sentence(),
+            'content' => implode("\n\n", $this->faker->paragraphs(40)),
+            'user_id' => User::where('role', 'Guru')->inRandomOrder()->first()->id,
+            'description' => $this->faker->text(150),
+            'category_id' => Category::inRandomOrder()->first()->id,
         ];
     }
 }
