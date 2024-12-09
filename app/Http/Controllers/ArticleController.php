@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
 
 class ArticleController extends Controller
@@ -18,12 +19,18 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('user', 'category')->get(); 
-        // dd($articles);
-        // Mengambil artikel dengan relasi user dan category
-        return Inertia::render('Articles/Index', compact('articles'));
+        $articles = Redis::get('articles');
 
+        if (!$articles) {
+            $articles = Article::with('user', 'category')->get();
+            Redis::set('articles', $articles->toJson()); 
+        } else {
+            $articles = json_decode($articles);
+        }
+
+        return Inertia::render('Articles/Index', compact('articles'));
     }
+    
 
     public function show(Article $article)
     {
@@ -56,14 +63,18 @@ class ArticleController extends Controller
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
         ]);
-        // dd(Auth::id());
-        Article::create([
+
+        // Menyimpan artikel baru
+        $article = Article::create([
             'title' => $request->title,
             'content' => $request->content,
             'category_id' => $request->category_id,
             'user_id' => Auth::id(),
             'description' => $request->description ?? '',
         ]);
+        // update redis
+        Redis::del('articles'); 
+        Redis::set('articles', Article::with('user', 'category')->get()->toJson()); // Menyimpan artikel yang baru
 
         return redirect()->route('articles.index');
     }
@@ -102,6 +113,9 @@ class ArticleController extends Controller
             'category_id' => $request->category_id,
             'description' => $request->description ?? '',
         ]);
+        // update redis
+        Redis::del('articles'); 
+        Redis::set('articles', Article::with('user', 'category')->get()->toJson()); 
 
         return redirect()->route('articles.index');
     }
@@ -115,6 +129,8 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
+        Redis::del('articles'); 
+        Redis::set('articles', Article::with('user', 'category')->get()->toJson()); 
 
         return redirect()->route('articles.index');
     }
