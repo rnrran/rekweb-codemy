@@ -34,7 +34,7 @@ const Index: React.FC<IndexProps> = ({ articles }) => {
                 </h2>
             }
         >
-    <Head title="Homes" />
+    <Head title="Codemy - Homes" />
 
     <div className="py-12">
       <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
