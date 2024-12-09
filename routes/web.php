@@ -28,14 +28,14 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [ArticleController::class, 'index'])->name('articles.index');  // Daftar artikel
-    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');  // Form buat artikel
-    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');  // Simpan artikel
-    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');  // Form edit artikel
-    Route::put('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');  // Update artikel
-    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');  // Hapus artikel
+    Route::get('/', [ArticleController::class, 'index'])->name('articles.index'); 
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');  
+    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');  
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit'); 
+    Route::put('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');  
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy'); 
 });
 
 // Route::resource('articles', ArticleController::class);
-Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');  // Daftar artikel
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');  
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
