@@ -7,15 +7,22 @@ export default defineConfig({
         laravel({
             input: 'resources/js/app.tsx',
             ssr: 'resources/js/ssr.tsx',
-            
             refresh: true,
         }),
         react(),
     ],
     server: {
+        host: '0.0.0.0', 
+        port: 5173, 
+        cors: true, 
         proxy: {
-            '/api': 'http://localhost', // Sesuaikan dengan alamat backend Laravel
-            '/sanctum/csrf-cookie': 'http://localhost', // Tambahkan untuk mengizinkan request CSRF
-        }
+            '/api': 'http://localhost', 
+            '/sanctum/csrf-cookie': 'http://localhost', 
+        },
+        hmr: {
+            host: '192.168.1.2', 
+            protocol: 'ws',
+            port: 5173,
+        },
     }
 });
