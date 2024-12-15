@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('koin');
-            $table->integer('poin');
+            $table->integer('koin')->default(1000);
+            $table->integer('poin')->default(1000);
             $table->enum('role', ['Siswa', 'Guru', 'Admin'])->default('Siswa');
             $table->rememberToken();
             $table->timestamps();
